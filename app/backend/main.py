@@ -3,16 +3,12 @@ from fastapi.responses import JSONResponse
 
 from src.config.db import Base, engine
 from src.config.errors import AppError
-from src.router.routes import router
+from src.api.router.routes import router
 
-# ─── Create tables on startup ────────────────────────────────────────
 Base.metadata.create_all(bind=engine)
 
-# ─── App ─────────────────────────────────────────────────────────────
 app = FastAPI(title="Scoped API", version="0.1.0")
 
-
-# ─── Global Error Handler ────────────────────────────────────────────
 @app.exception_handler(AppError)
 async def app_error_handler(_request: Request, exc: AppError) -> JSONResponse:
     return JSONResponse(
@@ -21,7 +17,6 @@ async def app_error_handler(_request: Request, exc: AppError) -> JSONResponse:
     )
 
 
-# ─── Register Routers ────────────────────────────────────────────────
 app.include_router(router)
 
 

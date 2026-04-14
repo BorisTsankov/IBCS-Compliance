@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from src.config.db import Base, engine
+from src.core.models.user_model import UserModel
 from src.config.errors import AppError
 from src.api.router.routes import router
 

@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from src.config.config import settings
 from src.config.errors import AppError
-from src.core.schemas.User import LoginRequest, RegisterRequest, TokenResponse, UserResponse
+from src.api.contracts import LoginRequest, RegisterRequest, TokenResponse
 from src.core.models.user_model import UserModel
 from src.dal.repo.user_repo import UserRepository
 
@@ -14,7 +14,8 @@ from src.dal.repo.user_repo import UserRepository
 class AuthService:
     """Handles registration, login, password hashing, and JWT token management."""
 
-    _pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    # Use pbkdf2_sha256 to avoid bcrypt backend/runtime compatibility issues.
+    _pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
 
     def __init__(self, db: Session) -> None:
         self._repo = UserRepository(db)

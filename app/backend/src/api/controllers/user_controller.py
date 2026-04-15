@@ -1,9 +1,9 @@
 from fastapi import Depends
 from sqlalchemy.orm import Session
 
+from src.api.contracts import ApiResponse, UserResponse
 from src.api.middlewares.auth import get_current_user_id
 from src.config.db import get_db
-from src.core.schemas.User import ApiResponse, UserResponse
 from src.core.services.user_service import UserService
 
 

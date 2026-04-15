@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from src.core.schemas.User import ApiResponse, LoginRequest, RegisterRequest, TokenResponse
+from src.api.contracts import ApiResponse, LoginRequest, RegisterRequest, TokenResponse
 from src.core.services.auth.auth_service import AuthService
 
 

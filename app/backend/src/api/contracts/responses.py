@@ -1,24 +1,11 @@
 from datetime import datetime
-from typing import Any, Generic, TypeVar
+from typing import Generic, TypeVar
 
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel
 
 T = TypeVar("T")
 
 
-# Request Schemas
-class RegisterRequest(BaseModel):
-    username: str = Field(min_length=3, max_length=50)
-    email: EmailStr
-    password: str = Field(min_length=8, max_length=128)
-
-
-class LoginRequest(BaseModel):
-    username: str
-    password: str
-
-
-# Response Schemas
 class UserResponse(BaseModel):
     id: str
     username: str
@@ -33,7 +20,6 @@ class TokenResponse(BaseModel):
     token_type: str = "bearer"
 
 
-# Unified API Response
 class ApiResponse(BaseModel, Generic[T]):
     status_code: int
     message: str

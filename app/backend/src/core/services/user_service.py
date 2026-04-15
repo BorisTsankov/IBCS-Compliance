@@ -1,7 +1,7 @@
 from sqlalchemy.orm import Session
 
+from src.api.contracts import UserResponse
 from src.config.errors import AppError
-from src.core.schemas.User import UserResponse
 from src.dal.repo.user_repo import UserRepository
 
 

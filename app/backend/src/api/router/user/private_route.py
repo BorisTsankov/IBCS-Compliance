@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 
+from src.api.contracts import ApiResponse, UserResponse
 from src.api.controllers.user_controller import UserController
-from src.core.schemas.User import ApiResponse, UserResponse
 
 router = APIRouter(prefix="/users", tags=["Users"])
 

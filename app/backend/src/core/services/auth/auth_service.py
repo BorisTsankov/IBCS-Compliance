@@ -15,7 +15,10 @@ class AuthService:
     """Handles registration, login, password hashing, and JWT token management."""
 
     # Use pbkdf2_sha256 to avoid bcrypt backend/runtime compatibility issues.
-    _pwd_context = CryptContext(schemes=["pbkdf2_sha256"], deprecated="auto")
+    _pwd_context = CryptContext(
+    schemes=["pbkdf2_sha256", "bcrypt"],
+    deprecated="auto"
+)
 
     def __init__(self, db: Session) -> None:
         self._repo = UserRepository(db)

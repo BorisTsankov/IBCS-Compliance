@@ -1,0 +1,28 @@
+from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Text
+from sqlalchemy.dialects.postgresql import JSONB
+from src.config.db import Base
+
+
+class DashboardAnalysis(Base):
+    __tablename__ = "dashboard_analyses"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, ForeignKey("users.id"), nullable=True)
+
+    original_filename = Column(String, nullable=False)
+    stored_filename = Column(String, nullable=False)
+    file_path = Column(String, nullable=False)
+    file_type = Column(String, nullable=False)
+    file_size = Column(Integer, nullable=False)
+
+    status = Column(String, nullable=False, default="processing")
+    overall_result = Column(String, nullable=True)   # compliant / partial / non_compliant
+    overall_score = Column(Integer, nullable=True)
+    confidence = Column(String, nullable=True)
+    summary = Column(Text, nullable=True)
+    feedback_json = Column(JSONB, nullable=True)
+    error_message = Column(Text, nullable=True)
+
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

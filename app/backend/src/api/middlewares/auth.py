@@ -1,12 +1,15 @@
-from fastapi import Depends, Request
-from sqlalchemy.orm import Session
+from fastapi import Depends
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 
-from src.config.db import get_db
 from src.config.errors import AppError
 from src.core.services.auth.auth_service import AuthService
 
+bearer_scheme = HTTPBearer(auto_error=False)
 
-def get_current_user_id(request: Request, db: Session = Depends(get_db)) -> str:
+
+def get_current_user_id(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+) -> str:
     """FastAPI dependency that extracts and validates the JWT from the
     Authorization header and returns the authenticated user's ID.
 
@@ -15,12 +18,10 @@ def get_current_user_id(request: Request, db: Session = Depends(get_db)) -> str:
         def me(user_id: str = Depends(get_current_user_id)):
             ...
     """
-    auth_header: str | None = request.headers.get("Authorization")
-
-    if auth_header is None or not auth_header.startswith("Bearer "):
+    if credentials is None:
         raise AppError("MISSING_TOKEN")
 
-    token = auth_header.split(" ", 1)[1]
+    token = credentials.credentials
     payload = AuthService.decode_token(token)
 
     user_id: str | None = payload.get("sub")
@@ -29,3 +30,19 @@ def get_current_user_id(request: Request, db: Session = Depends(get_db)) -> str:
         raise AppError("INVALID_TOKEN")
 
     return user_id
+
+
+def get_optional_current_user_id(
+    credentials: HTTPAuthorizationCredentials | None = Depends(bearer_scheme),
+) -> str | None:
+    if credentials is None:
+        return None
+
+    token = credentials.credentials
+
+    try:
+        payload = AuthService.decode_token(token)
+        user_id: str | None = payload.get("sub")
+        return user_id
+    except Exception:
+        return None

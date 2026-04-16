@@ -53,7 +53,7 @@ export const useRegister = () => {
       const token = response.data;
       localStorage.setItem("auth_token", token.access_token);
       toast.success("Registration successful");
-      navigate("/");
+      window.location.href = "/dashboard";
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Registration failed";

@@ -54,7 +54,7 @@ const AppShell = () => {
   return (
     <div className="min-h-screen bg-background">
   <div className="flex h-screen overflow-hidden">
-    <aside className="hidden h-screen w-[250px] shrink-0 border-r bg-card lg:flex lg:flex-col">
+    <aside className="hidden h-screen w-62.5 shrink-0 border-r bg-card lg:flex lg:flex-col">
           <div className="flex items-center gap-3 border-b px-6 py-6">
             <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-violet-600 text-white shadow-sm">
               <PanelLeft className="h-5 w-5" />

@@ -210,8 +210,8 @@ const Landing = () => {
             </div>
 
             <div className="relative">
-              <div className="rounded-[32px] border bg-card p-5 shadow-xl">
-                <div className="rounded-[24px] border bg-accent p-5">
+              <div className="rounded-4xl border bg-card p-5 shadow-xl">
+                <div className="rounded-3xl border bg-accent p-5">
                   <div className="flex items-center justify-between">
                     <div>
                       <p className="text-sm text-muted-foreground">
@@ -319,7 +319,7 @@ const Landing = () => {
         </section>
 
         <section className="px-6 py-8 md:px-8 md:py-16">
-          <div className="mx-auto max-w-7xl rounded-[32px] border bg-card p-8 shadow-sm md:p-10">
+          <div className="mx-auto max-w-7xl rounded-4xl border bg-card p-8 shadow-sm md:p-10">
             <div className="max-w-2xl">
               <p className="text-sm font-medium text-violet-700 dark:text-violet-300">
                 How it works
@@ -358,7 +358,7 @@ const Landing = () => {
         </section>
 
         <section className="px-6 py-8 md:px-8 md:py-20">
-          <div className="mx-auto max-w-5xl rounded-[32px] bg-violet-700 px-8 py-12 text-center text-white shadow-xl dark:bg-violet-800 md:px-12">
+          <div className="mx-auto max-w-5xl rounded-4xl bg-violet-700 px-8 py-12 text-center text-white shadow-xl dark:bg-violet-800 md:px-12">
             <p className="text-sm font-medium text-violet-100">
               Ready to get started?
             </p>

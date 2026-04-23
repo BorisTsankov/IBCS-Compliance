@@ -7,7 +7,7 @@ type AnalysisDetailsProps = {
 const AnalysisDetails = ({ analysis }: AnalysisDetailsProps) => {
   if (!analysis) {
     return (
-      <div className="flex min-h-[420px] items-center justify-center rounded-xl border border-dashed bg-card p-6 text-sm text-muted-foreground shadow-sm">
+      <div className="flex min-h-105 items-center justify-center rounded-xl border border-dashed bg-card p-6 text-sm text-muted-foreground shadow-sm">
         Upload a dashboard or select one from your history.
       </div>
     );

@@ -1,25 +1,25 @@
 
-import "@/styles/globals.css";
+  import "@/styles/globals.css";
 
-import App from "./App.tsx"
+  import App from "./App.tsx"
 
-import { StrictMode } from "react"
-import { createRoot } from "react-dom/client"
+  import { StrictMode } from "react"
+  import { createRoot } from "react-dom/client"
 
-import { ThemeProvider } from "@/components/theme-provider.tsx"
-import { UserProvider } from "@/context/UserContext.tsx"
-import { BrowserRouter } from "react-router-dom";
-import { Toaster } from "sonner";
+  import { ThemeProvider } from "@/components/theme-provider.tsx"
+  import { UserProvider } from "@/context/UserContext.tsx"
+  import { BrowserRouter } from "react-router-dom";
+  import { Toaster } from "sonner";
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <UserProvider>
-        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-          <App />
-          <Toaster position="top-center" />
-        </ThemeProvider>
-      </UserProvider>
-    </BrowserRouter>
-  </StrictMode>
-)
+  createRoot(document.getElementById("root")!).render(
+    <StrictMode>
+      <BrowserRouter>
+        <UserProvider>
+          <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+            <App />
+            <Toaster position="top-center" />
+          </ThemeProvider>
+        </UserProvider>
+      </BrowserRouter>
+    </StrictMode>
+  )

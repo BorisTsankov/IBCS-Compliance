@@ -4,13 +4,17 @@ import {
   BarChart3,
   CheckCircle2,
   LayoutPanelTop,
+  Monitor,
+  Moon,
   ScanSearch,
   ShieldCheck,
   Sparkles,
+  Sun,
   Upload,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider";
 
 const features = [
   {
@@ -22,7 +26,7 @@ const features = [
   {
     title: "Detection preview",
     description:
-      "See the uploaded dashboard with detected chart regions highlighted directly in the interface.",
+      "See uploaded dashboards with detected chart regions highlighted directly in the interface.",
     icon: ScanSearch,
   },
   {
@@ -37,44 +41,101 @@ const steps = [
   {
     title: "Upload your dashboard",
     description:
-      "Drop in a PNG, JPG, PDF, PPTX, or DOCX file to begin the analysis.",
+      "Add a PNG, JPG, PDF, PPTX, or DOCX file to begin the analysis.",
     icon: Upload,
   },
   {
     title: "Let Scoped inspect it",
     description:
-      "Our pipeline processes the file, detects visual structures, and generates analysis output.",
+      "The system processes the file, detects visual structures, and generates analysis output.",
     icon: LayoutPanelTop,
   },
   {
     title: "Review compliance feedback",
     description:
-      "Open the result, inspect detections, and understand where the dashboard succeeds or fails.",
+      "Inspect detections, scores, and feedback categories to understand the dashboard quality.",
     icon: CheckCircle2,
   },
 ];
 
-const Landing = () => {
+const ThemeSwitcher = ({
+  theme,
+  setTheme,
+}: {
+  theme: "dark" | "light" | "system";
+  setTheme: (theme: "dark" | "light" | "system") => void;
+}) => {
   return (
-    <div className="min-h-screen bg-[#f7f8fc] text-slate-900">
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur">
+    <div className="hidden grid-cols-3 gap-1 rounded-xl bg-accent p-1 sm:grid">
+      <button
+        type="button"
+        onClick={() => setTheme("light")}
+        className={`rounded-lg p-2 transition ${
+          theme === "light"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Sun className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setTheme("dark")}
+        className={`rounded-lg p-2 transition ${
+          theme === "dark"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Moon className="h-4 w-4" />
+      </button>
+
+      <button
+        type="button"
+        onClick={() => setTheme("system")}
+        className={`rounded-lg p-2 transition ${
+          theme === "system"
+            ? "bg-background text-foreground shadow-sm"
+            : "text-muted-foreground hover:text-foreground"
+        }`}
+      >
+        <Monitor className="h-4 w-4" />
+      </button>
+    </div>
+  );
+};
+
+const Landing = () => {
+  const { theme, setTheme } = useTheme();
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <header className="border-b bg-card/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-sm">
               <LayoutPanelTop className="h-5 w-5" />
             </div>
             <div>
-              <p className="text-lg font-bold tracking-tight">Scoped</p>
-              <p className="text-xs text-slate-400">IBCS Compliance Checker</p>
+              <p className="text-lg font-bold tracking-tight text-foreground">
+                Scoped
+              </p>
+              <p className="text-xs text-muted-foreground">
+                IBCS Compliance Checker
+              </p>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
+            <ThemeSwitcher theme={theme} setTheme={setTheme} />
+
             <Link to="/login">
-              <Button variant="ghost" className="text-slate-600">
+              <Button variant="ghost" className="text-muted-foreground">
                 Log in
               </Button>
             </Link>
+
             <Link to="/register">
               <Button className="bg-violet-600 hover:bg-violet-700">
                 Get started
@@ -88,16 +149,16 @@ const Landing = () => {
         <section className="px-6 py-16 md:px-8 md:py-24">
           <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
             <div className="max-w-2xl">
-              <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-medium text-violet-700">
+              <div className="inline-flex items-center gap-2 rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-medium text-violet-700 dark:border-violet-500/30 dark:bg-violet-500/10 dark:text-violet-200">
                 <ShieldCheck className="h-4 w-4" />
                 Built for dashboard quality review
               </div>
 
-              <h1 className="mt-6 text-4xl font-bold tracking-tight text-slate-900 md:text-6xl">
+              <h1 className="mt-6 text-4xl font-bold tracking-tight text-foreground md:text-6xl">
                 Analyze dashboards for IBCS compliance with clarity.
               </h1>
 
-              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-600">
+              <p className="mt-6 max-w-xl text-lg leading-8 text-muted-foreground">
                 Scoped helps teams upload dashboards, detect visual elements,
                 and review structured compliance feedback in one clean workflow.
               </p>
@@ -121,84 +182,71 @@ const Landing = () => {
               </div>
 
               <div className="mt-10 grid gap-4 sm:grid-cols-3">
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                  <p className="text-2xl font-bold text-slate-900">Fast</p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Upload and review in seconds
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                  <p className="text-2xl font-bold text-slate-900">Visual</p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Detection preview included
-                  </p>
-                </div>
-
-                <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm">
-                  <p className="text-2xl font-bold text-slate-900">Structured</p>
-                  <p className="mt-1 text-sm text-slate-500">
-                    Feedback by category
-                  </p>
-                </div>
+                {["Fast", "Visual", "Structured"].map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border bg-card p-4 shadow-sm"
+                  >
+                    <p className="text-2xl font-bold text-foreground">{item}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">
+                      {item === "Fast"
+                        ? "Upload and review quickly"
+                        : item === "Visual"
+                          ? "Detection preview included"
+                          : "Feedback by category"}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
 
             <div className="relative">
-              <div className="rounded-[32px] border border-slate-200 bg-white p-5 shadow-xl">
-                <div className="rounded-[24px] border border-slate-200 bg-[#f8f9fd] p-5">
+              <div className="rounded-[32px] border bg-card p-5 shadow-xl">
+                <div className="rounded-[24px] border bg-accent p-5">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-sm text-slate-400">Scoped Preview</p>
-                      <h2 className="mt-1 text-xl font-semibold text-slate-900">
+                      <p className="text-sm text-muted-foreground">
+                        Scoped Preview
+                      </p>
+                      <h2 className="mt-1 text-xl font-semibold text-foreground">
                         Dashboard Analysis
                       </h2>
                     </div>
 
-                    <div className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700">
+                    <div className="rounded-full bg-violet-100 px-3 py-1 text-xs font-semibold text-violet-700 dark:bg-violet-500/20 dark:text-violet-200">
                       Partial
                     </div>
                   </div>
 
                   <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">
-                        Score
-                      </p>
-                      <p className="mt-2 text-lg font-semibold text-slate-900">
-                        72 / 100
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">
-                        Confidence
-                      </p>
-                      <p className="mt-2 text-lg font-semibold text-slate-900">
-                        0.88
-                      </p>
-                    </div>
-
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <p className="text-xs uppercase tracking-wide text-slate-400">
-                        Result
-                      </p>
-                      <p className="mt-2 text-lg font-semibold text-slate-900">
-                        Partial
-                      </p>
-                    </div>
+                    {[
+                      ["Score", "72 / 100"],
+                      ["Confidence", "0.88"],
+                      ["Result", "Partial"],
+                    ].map(([label, value]) => (
+                      <div key={label} className="rounded-2xl bg-card p-4 shadow-sm">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                          {label}
+                        </p>
+                        <p className="mt-2 text-lg font-semibold text-foreground">
+                          {value}
+                        </p>
+                      </div>
+                    ))}
                   </div>
 
-                  <div className="mt-5 rounded-2xl border border-slate-200 bg-white p-4">
+                  <div className="mt-5 rounded-2xl border bg-card p-4">
                     <div className="mb-3 flex items-center justify-between">
-                      <p className="text-sm font-medium text-slate-900">
+                      <p className="text-sm font-medium text-foreground">
                         Detection Preview
                       </p>
-                      <p className="text-xs text-slate-400">bar_chart detected</p>
+                      <p className="text-xs text-muted-foreground">
+                        bar_chart detected
+                      </p>
                     </div>
 
-                    <div className="flex h-64 items-center justify-center rounded-2xl bg-slate-100">
-                      <div className="relative h-44 w-72 rounded-xl border-2 border-dashed border-slate-300 bg-white">
+                    <div className="flex h-64 items-center justify-center rounded-2xl bg-accent">
+                      <div className="relative h-44 w-72 rounded-xl border-2 border-dashed bg-card">
                         <div className="absolute left-12 top-8 h-24 w-12 rounded bg-violet-200" />
                         <div className="absolute left-28 top-16 h-16 w-12 rounded bg-violet-300" />
                         <div className="absolute left-44 top-4 h-28 w-12 rounded bg-violet-500" />
@@ -208,38 +256,9 @@ const Landing = () => {
                   </div>
 
                   <div className="mt-5 grid gap-3">
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-slate-900">
-                          Layout & Positioning
-                        </p>
-                        <span className="rounded-full bg-lime-100 px-3 py-1 text-xs font-medium text-lime-700">
-                          pass
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-slate-900">
-                          Color & Contrast
-                        </p>
-                        <span className="rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-700">
-                          warning
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl bg-white p-4 shadow-sm">
-                      <div className="flex items-center justify-between">
-                        <p className="text-sm font-medium text-slate-900">
-                          Information Hierarchy
-                        </p>
-                        <span className="rounded-full bg-red-100 px-3 py-1 text-xs font-medium text-red-700">
-                          fail
-                        </span>
-                      </div>
-                    </div>
+                    <FeedbackPreview title="Layout & Positioning" status="pass" />
+                    <FeedbackPreview title="Color & Contrast" status="warning" />
+                    <FeedbackPreview title="Information Hierarchy" status="fail" />
                   </div>
                 </div>
               </div>
@@ -253,8 +272,10 @@ const Landing = () => {
         <section className="px-6 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8">
-              <p className="text-sm font-medium text-violet-600">Features</p>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+              <p className="text-sm font-medium text-violet-600 dark:text-violet-300">
+                Features
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
                 Everything in one review flow
               </h2>
             </div>
@@ -266,16 +287,16 @@ const Landing = () => {
                 return (
                   <div
                     key={feature.title}
-                    className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm"
+                    className="rounded-3xl border bg-card p-6 shadow-sm"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-violet-100 text-violet-700 dark:bg-violet-500/20 dark:text-violet-200">
                       <Icon className="h-5 w-5" />
                     </div>
 
-                    <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                    <h3 className="mt-5 text-lg font-semibold text-foreground">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-7 text-slate-600">
+                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
                       {feature.description}
                     </p>
                   </div>
@@ -286,10 +307,12 @@ const Landing = () => {
         </section>
 
         <section className="px-6 py-8 md:px-8 md:py-16">
-          <div className="mx-auto max-w-7xl rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm md:p-10">
+          <div className="mx-auto max-w-7xl rounded-[32px] border bg-card p-8 shadow-sm md:p-10">
             <div className="max-w-2xl">
-              <p className="text-sm font-medium text-violet-600">How it works</p>
-              <h2 className="mt-2 text-3xl font-bold tracking-tight text-slate-900">
+              <p className="text-sm font-medium text-violet-600 dark:text-violet-300">
+                How it works
+              </p>
+              <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
                 From upload to insight
               </h2>
             </div>
@@ -299,20 +322,20 @@ const Landing = () => {
                 const Icon = step.icon;
 
                 return (
-                  <div key={step.title} className="rounded-3xl bg-slate-50 p-6">
+                  <div key={step.title} className="rounded-3xl bg-accent p-6">
                     <div className="flex items-center gap-3">
-                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-white text-violet-700 shadow-sm">
+                      <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-violet-700 shadow-sm dark:text-violet-200">
                         <Icon className="h-5 w-5" />
                       </div>
-                      <span className="text-sm font-medium text-slate-400">
+                      <span className="text-sm font-medium text-muted-foreground">
                         0{index + 1}
                       </span>
                     </div>
 
-                    <h3 className="mt-5 text-lg font-semibold text-slate-900">
+                    <h3 className="mt-5 text-lg font-semibold text-foreground">
                       {step.title}
                     </h3>
-                    <p className="mt-2 text-sm leading-7 text-slate-600">
+                    <p className="mt-2 text-sm leading-7 text-muted-foreground">
                       {step.description}
                     </p>
                   </div>
@@ -354,6 +377,34 @@ const Landing = () => {
           </div>
         </section>
       </main>
+    </div>
+  );
+};
+
+const FeedbackPreview = ({
+  title,
+  status,
+}: {
+  title: string;
+  status: "pass" | "warning" | "fail";
+}) => {
+  const statusStyles =
+    status === "pass"
+      ? "bg-lime-100 text-lime-700 dark:bg-lime-500/20 dark:text-lime-200"
+      : status === "warning"
+        ? "bg-amber-100 text-amber-700 dark:bg-amber-500/20 dark:text-amber-200"
+        : "bg-red-100 text-red-700 dark:bg-red-500/20 dark:text-red-200";
+
+  return (
+    <div className="rounded-2xl bg-card p-4 shadow-sm">
+      <div className="flex items-center justify-between">
+        <p className="text-sm font-medium text-foreground">{title}</p>
+        <span
+          className={`rounded-full px-3 py-1 text-xs font-medium ${statusStyles}`}
+        >
+          {status}
+        </span>
+      </div>
     </div>
   );
 };

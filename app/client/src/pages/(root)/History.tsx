@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { LoaderCircle } from "lucide-react";
+import { ArrowRight, LoaderCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
 
@@ -23,9 +23,9 @@ const History = () => {
 
       setHistory(data);
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to load dashboard history.";
-      toast.error(message);
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load dashboard history.",
+      );
     } finally {
       setIsLoadingHistory(false);
     }
@@ -40,7 +40,7 @@ const History = () => {
   if (pending || isLoadingHistory) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
-        <div className="flex items-center gap-3 text-sm text-slate-500">
+        <div className="flex items-center gap-3 text-sm text-muted-foreground">
           <LoaderCircle className="h-5 w-5 animate-spin" />
           Loading history...
         </div>
@@ -49,56 +49,78 @@ const History = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#f7f8fc] p-6 md:p-8">
+    <div className="min-h-screen bg-background p-6 md:p-8">
       <div className="mx-auto max-w-7xl space-y-6">
-        <div className="rounded-2xl bg-white p-6 shadow-sm">
-          <p className="text-sm text-slate-400">App / History</p>
-          <h1 className="mt-1 text-2xl font-semibold text-slate-900">
+        <div className="rounded-2xl border bg-card p-6 shadow-sm">
+          <p className="text-sm text-muted-foreground">App / History</p>
+          <h1 className="mt-1 text-2xl font-semibold text-foreground">
             Analysis History
           </h1>
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-muted-foreground">
             Browse previously uploaded dashboards and open any analysis in detail.
           </p>
         </div>
 
-        <section className="rounded-2xl bg-white p-6 shadow-sm">
+        <section className="rounded-2xl border bg-card p-6 shadow-sm">
           {history.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-slate-500">
+            <div className="rounded-xl border border-dashed p-6 text-sm text-muted-foreground">
               No previous analyses yet.
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-              {history.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => navigate(`/dashboard/${item.id}`)}
-                  className="rounded-2xl border border-slate-200 bg-white p-5 text-left transition hover:border-violet-400 hover:bg-violet-50"
-                >
-                  <p className="truncate text-base font-semibold text-slate-900">
-                    {item.original_filename}
-                  </p>
+              {history.map((item) => {
+                const resultLabel =
+                  item.overall_result?.replaceAll("_", " ") ?? "unknown";
 
-                  <div className="mt-4 space-y-2 text-sm text-slate-600">
-                    <p>
-                      <span className="text-slate-400">Score:</span>{" "}
-                      {item.overall_score ?? "-"} / 100
-                    </p>
-                    <p className="capitalize">
-                      <span className="text-slate-400">Result:</span>{" "}
-                      {item.overall_result?.replaceAll("_", " ") ?? "unknown"}
-                    </p>
-                    <p>
-                      <span className="text-slate-400">Status:</span>{" "}
-                      <span className="capitalize">{item.status}</span>
-                    </p>
-                    <p>
-                      <span className="text-slate-400">Uploaded:</span>{" "}
-                      {new Date(item.created_at).toLocaleString()}
-                    </p>
-                  </div>
-                </button>
-              ))}
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => navigate(`/dashboard/${item.id}`)}
+                    className="group rounded-2xl border bg-card p-5 text-left transition hover:border-violet-400 hover:bg-accent"
+                  >
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-base font-semibold text-foreground">
+                          {item.original_filename}
+                        </p>
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          {new Date(item.created_at).toLocaleString()}
+                        </p>
+                      </div>
+
+                      <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition group-hover:translate-x-1 group-hover:text-foreground" />
+                    </div>
+
+                    <div className="mt-5 grid grid-cols-2 gap-3">
+                      <div className="rounded-xl bg-background p-3">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                          Score
+                        </p>
+                        <p className="mt-1 text-sm font-semibold text-foreground">
+                          {item.overall_score ?? "-"} / 100
+                        </p>
+                      </div>
+
+                      <div className="rounded-xl bg-background p-3">
+                        <p className="text-xs uppercase tracking-wide text-muted-foreground">
+                          Result
+                        </p>
+                        <p className="mt-1 text-sm font-semibold capitalize text-foreground">
+                          {resultLabel}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="mt-4 flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Status</span>
+                      <span className="rounded-full bg-violet-100 px-3 py-1 text-xs font-medium capitalize text-violet-700 dark:bg-violet-500/20 dark:text-violet-200">
+                        {item.status}
+                      </span>
+                    </div>
+                  </button>
+                );
+              })}
             </div>
           )}
         </section>

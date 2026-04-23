@@ -19,6 +19,9 @@ const Dashboard = () => {
   const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
+  const primaryButton =
+  "bg-violet-700 text-white font-semibold shadow-sm hover:bg-violet-800 disabled:bg-violet-400 disabled:text-white disabled:opacity-70 dark:bg-violet-600 dark:text-white dark:hover:bg-violet-700";
+
   const loadLatestAnalysis = async () => {
     try {
       setIsLoadingAnalysis(true);
@@ -143,12 +146,12 @@ const Dashboard = () => {
           </div>
 
           <Button
-            onClick={() => setIsUploadOpen(true)}
-            className="bg-violet-600 hover:bg-violet-700"
-          >
-            <Plus className="mr-2 h-4 w-4" />
-            Add New Dashboard
-          </Button>
+  onClick={() => setIsUploadOpen(true)}
+  className={primaryButton}
+>
+  <Plus className="mr-2 h-4 w-4 text-white" />
+  Add New Dashboard
+</Button>
         </div>
 
         <AnalysisDetails analysis={selectedAnalysis} />
@@ -221,20 +224,20 @@ const Dashboard = () => {
               </Button>
 
               <Button
-                type="button"
-                onClick={handleUpload}
-                disabled={isUploading || !selectedFile}
-                className="bg-violet-600 hover:bg-violet-700"
-              >
-                {isUploading ? (
-                  <div className="flex items-center gap-2">
-                    <LoaderCircle className="h-4 w-4 animate-spin" />
-                    Uploading...
-                  </div>
-                ) : (
-                  "Add New Dashboard"
-                )}
-              </Button>
+  type="button"
+  onClick={handleUpload}
+  disabled={isUploading || !selectedFile}
+  className={primaryButton}
+>
+  {isUploading ? (
+    <div className="flex items-center gap-2 text-white">
+      <LoaderCircle className="h-4 w-4 animate-spin text-white" />
+      Uploading...
+    </div>
+  ) : (
+    "Add New Dashboard"
+  )}
+</Button>
             </div>
           </div>
         </div>

@@ -16,6 +16,12 @@ import {
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/components/theme-provider";
 
+const primaryButton =
+  "bg-violet-700 text-white font-semibold shadow-sm hover:bg-violet-800 dark:bg-violet-600 dark:text-white dark:hover:bg-violet-700";
+
+const outlineButton =
+  "border-border bg-background text-foreground font-semibold hover:bg-accent hover:text-foreground";
+
 const features = [
   {
     title: "AI-powered dashboard review",
@@ -114,7 +120,7 @@ const Landing = () => {
       <header className="border-b bg-card/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-8">
           <div className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-600 text-white shadow-sm">
+            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-violet-700 text-white shadow-sm dark:bg-violet-600">
               <LayoutPanelTop className="h-5 w-5" />
             </div>
             <div>
@@ -131,15 +137,16 @@ const Landing = () => {
             <ThemeSwitcher theme={theme} setTheme={setTheme} />
 
             <Link to="/login">
-              <Button variant="ghost" className="text-muted-foreground">
+              <Button
+                variant="ghost"
+                className="font-semibold text-foreground hover:bg-accent hover:text-foreground"
+              >
                 Log in
               </Button>
             </Link>
 
             <Link to="/register">
-              <Button className="bg-violet-600 hover:bg-violet-700">
-                Get started
-              </Button>
+              <Button className={primaryButton}>Get started</Button>
             </Link>
           </div>
         </div>
@@ -165,16 +172,18 @@ const Landing = () => {
 
               <div className="mt-8 flex flex-col gap-3 sm:flex-row">
                 <Link to="/register">
-                  <Button className="h-12 rounded-xl bg-violet-600 px-6 text-base hover:bg-violet-700">
+                  <Button
+                    className={`h-12 rounded-xl px-6 text-base ${primaryButton}`}
+                  >
                     Start analyzing
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <ArrowRight className="ml-2 h-4 w-4 text-white" />
                   </Button>
                 </Link>
 
                 <Link to="/login">
                   <Button
                     variant="outline"
-                    className="h-12 rounded-xl px-6 text-base"
+                    className={`h-12 rounded-xl px-6 text-base ${outlineButton}`}
                   >
                     Log in
                   </Button>
@@ -224,7 +233,10 @@ const Landing = () => {
                       ["Confidence", "0.88"],
                       ["Result", "Partial"],
                     ].map(([label, value]) => (
-                      <div key={label} className="rounded-2xl bg-card p-4 shadow-sm">
+                      <div
+                        key={label}
+                        className="rounded-2xl bg-card p-4 shadow-sm"
+                      >
                         <p className="text-xs uppercase tracking-wide text-muted-foreground">
                           {label}
                         </p>
@@ -272,7 +284,7 @@ const Landing = () => {
         <section className="px-6 py-8 md:px-8 md:py-12">
           <div className="mx-auto max-w-7xl">
             <div className="mb-8">
-              <p className="text-sm font-medium text-violet-600 dark:text-violet-300">
+              <p className="text-sm font-medium text-violet-700 dark:text-violet-300">
                 Features
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
@@ -309,7 +321,7 @@ const Landing = () => {
         <section className="px-6 py-8 md:px-8 md:py-16">
           <div className="mx-auto max-w-7xl rounded-[32px] border bg-card p-8 shadow-sm md:p-10">
             <div className="max-w-2xl">
-              <p className="text-sm font-medium text-violet-600 dark:text-violet-300">
+              <p className="text-sm font-medium text-violet-700 dark:text-violet-300">
                 How it works
               </p>
               <h2 className="mt-2 text-3xl font-bold tracking-tight text-foreground">
@@ -346,11 +358,11 @@ const Landing = () => {
         </section>
 
         <section className="px-6 py-8 md:px-8 md:py-20">
-          <div className="mx-auto max-w-5xl rounded-[32px] bg-violet-600 px-8 py-12 text-center text-white shadow-xl md:px-12">
+          <div className="mx-auto max-w-5xl rounded-[32px] bg-violet-700 px-8 py-12 text-center text-white shadow-xl dark:bg-violet-800 md:px-12">
             <p className="text-sm font-medium text-violet-100">
               Ready to get started?
             </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-white md:text-4xl">
               Upload your first dashboard and review it with Scoped.
             </h2>
             <p className="mx-auto mt-4 max-w-2xl text-sm leading-7 text-violet-100">
@@ -360,7 +372,7 @@ const Landing = () => {
 
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link to="/register">
-                <Button className="h-12 rounded-xl bg-white px-6 text-base text-violet-700 hover:bg-violet-50">
+                <Button className="h-12 rounded-xl bg-white px-6 text-base font-semibold text-violet-800 hover:bg-violet-50">
                   Create account
                 </Button>
               </Link>
@@ -368,7 +380,7 @@ const Landing = () => {
               <Link to="/login">
                 <Button
                   variant="outline"
-                  className="h-12 rounded-xl border-white/30 bg-transparent px-6 text-base text-white hover:bg-white/10"
+                  className="h-12 rounded-xl border-white/40 bg-transparent px-6 text-base font-semibold text-white hover:bg-white/10 hover:text-white"
                 >
                   Log in
                 </Button>

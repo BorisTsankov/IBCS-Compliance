@@ -8,6 +8,8 @@ import {
   Shield,
 } from "lucide-react";
 import { History as HistoryIcon } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/UserContext";
@@ -38,6 +40,14 @@ const navItems = [
 const AppShell = () => {
   const { user } = useUser();
   const location = useLocation();
+  const { logout } = useUser();
+const navigate = useNavigate();
+
+const handleLogout = () => {
+  logout();
+  toast.success("Logged out successfully.");
+  navigate("/login");
+};
 
   return (
     <div className="min-h-screen bg-[#f6f8fc]">
@@ -90,12 +100,13 @@ const AppShell = () => {
             </div>
 
             <Button
-              variant="ghost"
-              className="w-full justify-start text-slate-500 hover:bg-slate-50 hover:text-slate-900"
-            >
-              <LogOut className="mr-2 h-4 w-4" />
-              Log Out
-            </Button>
+  variant="ghost"
+  onClick={handleLogout}
+  className="w-full justify-start text-slate-500 hover:bg-slate-50 hover:text-slate-900"
+>
+  <LogOut className="mr-2 h-4 w-4" />
+  Log Out
+</Button>
           </div>
         </aside>
 

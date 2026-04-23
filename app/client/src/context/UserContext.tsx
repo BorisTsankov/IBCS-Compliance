@@ -13,6 +13,7 @@ type UserContextValue = {
   user: CurrentUser | null;
   pending: boolean;
   authenticated: boolean;
+  logout: () => void;
 };
 
 const UserContext = createContext<UserContextValue | undefined>(undefined);
@@ -47,14 +48,20 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
       }
     };
 
-    fetchCurrentUser();
+    void fetchCurrentUser();
   }, []);
+
+  const logout = () => {
+    localStorage.removeItem("auth_token");
+    setUser(null);
+  };
 
   const value = useMemo<UserContextValue>(
     () => ({
       user,
       pending,
       authenticated: Boolean(user),
+      logout,
     }),
     [user, pending],
   );

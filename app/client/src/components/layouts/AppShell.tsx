@@ -7,6 +7,7 @@ import {
   Settings,
   Shield,
 } from "lucide-react";
+import { History as HistoryIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/UserContext";
@@ -18,9 +19,9 @@ const navItems = [
     icon: LayoutDashboard,
   },
   {
-    label: "Analytics",
-    href: "/analytics",
-    icon: BarChart3,
+    label: "History",
+    href: "/history",
+    icon: HistoryIcon,
   },
   {
     label: "Security",

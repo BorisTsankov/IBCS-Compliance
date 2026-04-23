@@ -1,50 +1,68 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { LoaderCircle, Plus, X } from "lucide-react";
 import { toast } from "sonner";
+import { useParams } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 import { useUser } from "@/context/UserContext";
-import { apiRequest, type DashboardAnalysis, type FeedbackItem } from "@/lib/api";
+import { apiRequest, type DashboardAnalysis } from "@/lib/api";
+import AnalysisDetails from "@/components/dashboard/AnalysisDetails";
 
 const Dashboard = () => {
   const { user, pending, authenticated } = useUser();
+  const { id } = useParams();
 
-  const [history, setHistory] = useState<DashboardAnalysis[]>([]);
   const [selectedAnalysis, setSelectedAnalysis] = useState<DashboardAnalysis | null>(null);
-
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+  const [isLoadingAnalysis, setIsLoadingAnalysis] = useState(false);
   const [isUploading, setIsUploading] = useState(false);
 
-  const loadHistory = async () => {
+  const loadLatestAnalysis = async () => {
     try {
-      setIsLoadingHistory(true);
+      setIsLoadingAnalysis(true);
 
       const data = await apiRequest<DashboardAnalysis[]>("/api/dashboard/history", {
         method: "GET",
       });
 
-      setHistory(data);
-
-      if (data.length > 0 && !selectedAnalysis) {
-        setSelectedAnalysis(data[0]);
-      }
+      setSelectedAnalysis(data.length > 0 ? data[0] : null);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to load dashboard history.";
       toast.error(message);
     } finally {
-      setIsLoadingHistory(false);
+      setIsLoadingAnalysis(false);
+    }
+  };
+
+  const loadAnalysisById = async (analysisId: string) => {
+    try {
+      setIsLoadingAnalysis(true);
+
+      const data = await apiRequest<DashboardAnalysis>(`/api/dashboard/${analysisId}`, {
+        method: "GET",
+      });
+
+      setSelectedAnalysis(data);
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Failed to load dashboard analysis.";
+      toast.error(message);
+    } finally {
+      setIsLoadingAnalysis(false);
     }
   };
 
   useEffect(() => {
     if (!pending && authenticated) {
-      void loadHistory();
+      if (id) {
+        void loadAnalysisById(id);
+      } else {
+        void loadLatestAnalysis();
+      }
     }
-  }, [pending, authenticated]);
+  }, [pending, authenticated, id]);
 
   const handleUpload = async () => {
     if (!selectedFile) {
@@ -67,8 +85,6 @@ const Dashboard = () => {
       setSelectedFile(null);
       setIsUploadOpen(false);
       toast.success("Dashboard uploaded successfully.");
-
-      await loadHistory();
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Failed to upload dashboard.";
@@ -78,12 +94,7 @@ const Dashboard = () => {
     }
   };
 
-  const resultLabel = useMemo(() => {
-    if (!selectedAnalysis?.overall_result) return "Unknown";
-    return selectedAnalysis.overall_result.replaceAll("_", " ");
-  }, [selectedAnalysis]);
-
-  if (pending) {
+  if (pending || isLoadingAnalysis) {
     return (
       <div className="flex min-h-[60vh] items-center justify-center">
         <div className="flex items-center gap-3 text-sm text-slate-500">
@@ -117,209 +128,7 @@ const Dashboard = () => {
           </Button>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[340px_minmax(0,1fr)]">
-          <section className="rounded-2xl bg-white p-5 shadow-sm">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-slate-900">History</h2>
-              {isLoadingHistory && (
-                <LoaderCircle className="h-4 w-4 animate-spin text-slate-400" />
-              )}
-            </div>
-
-            {history.length === 0 ? (
-              <div className="rounded-xl border border-dashed border-slate-200 p-6 text-sm text-slate-500">
-                No previous analyses yet.
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {history.map((item) => {
-                  const isActive = selectedAnalysis?.id === item.id;
-
-                  return (
-                    <button
-                      key={item.id}
-                      type="button"
-                      onClick={() => setSelectedAnalysis(item)}
-                      className={`w-full rounded-xl border p-4 text-left transition ${
-                        isActive
-                          ? "border-violet-500 bg-violet-50"
-                          : "border-slate-200 bg-white hover:border-slate-300"
-                      }`}
-                    >
-                      <p className="truncate text-sm font-medium text-slate-900">
-                        {item.original_filename}
-                      </p>
-                      <p className="mt-1 text-xs text-slate-500">
-                        Score: {item.overall_score ?? "-"} / 100
-                      </p>
-                      <p className="mt-1 text-xs capitalize text-slate-500">
-                        Result: {item.overall_result?.replaceAll("_", " ") ?? "unknown"}
-                      </p>
-                    </button>
-                  );
-                })}
-              </div>
-            )}
-          </section>
-
-          <section className="rounded-2xl bg-white p-6 shadow-sm">
-            {!selectedAnalysis ? (
-              <div className="flex min-h-[420px] items-center justify-center rounded-xl border border-dashed border-slate-200 text-sm text-slate-500">
-                Upload a dashboard or select one from your history.
-              </div>
-            ) : (
-              <div className="space-y-6">
-  <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_220px]">
-    <div className="rounded-2xl border border-slate-200 p-5">
-      <p className="text-sm text-slate-400">Selected dashboard</p>
-      <h2 className="mt-1 text-2xl font-semibold text-slate-900">
-        {selectedAnalysis.original_filename}
-      </h2>
-      <p className="mt-3 text-sm leading-6 text-slate-600">
-        {selectedAnalysis.summary ?? "No summary available."}
-      </p>
-
-      <div className="mt-5 grid gap-3 sm:grid-cols-3">
-        <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Result
-          </p>
-          <p className="mt-2 text-sm font-semibold capitalize text-slate-900">
-            {resultLabel}
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Score
-          </p>
-          <p className="mt-2 text-sm font-semibold text-slate-900">
-            {selectedAnalysis.overall_score ?? "-"} / 100
-          </p>
-        </div>
-
-        <div className="rounded-xl bg-slate-50 p-4">
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Confidence
-          </p>
-          <p className="mt-2 text-sm font-semibold text-slate-900">
-            {selectedAnalysis.confidence ?? "-"}
-          </p>
-        </div>
-      </div>
-    </div>
-
-    <div className="rounded-2xl border border-slate-200 p-5">
-      <p className="text-sm text-slate-400">Details</p>
-
-      <div className="mt-4 space-y-4 text-sm text-slate-600">
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            File type
-          </p>
-          <p className="mt-1">{selectedAnalysis.file_type}</p>
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Size
-          </p>
-          <p className="mt-1">
-            {(selectedAnalysis.file_size / 1024 / 1024).toFixed(2)} MB
-          </p>
-        </div>
-
-        <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">
-            Status
-          </p>
-          <p className="mt-1 capitalize">{selectedAnalysis.status}</p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  {selectedAnalysis.annotated_image_path && (
-    <div>
-      <h3 className="mb-4 text-lg font-semibold text-slate-900">
-        Detection Preview
-      </h3>
-
-      <div className="overflow-hidden rounded-2xl border border-slate-200 bg-slate-50">
-        <img
-          src={`http://localhost:8000/${selectedAnalysis.annotated_image_path}`}
-          alt="Detected dashboard"
-          className="w-full object-contain"
-        />
-      </div>
-    </div>
-  )}
-
-  <div>
-    <h3 className="mb-4 text-lg font-semibold text-slate-900">
-      Feedback categories
-    </h3>
-
-    <div className="grid gap-4 md:grid-cols-2">
-      {selectedAnalysis.feedback_json?.map((item) => {
-        const statusStyles =
-          item.status === "pass"
-            ? "bg-lime-100 text-lime-800"
-            : item.status === "warning"
-              ? "bg-amber-100 text-amber-800"
-              : "bg-red-100 text-red-800";
-
-        return (
-          <div
-            key={`${selectedAnalysis.id}-${item.category}`}
-            className="rounded-2xl border border-slate-200 p-5"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="text-sm text-slate-400">{item.category}</p>
-                <h4 className="mt-1 text-lg font-semibold text-slate-900">
-                  Output
-                </h4>
-              </div>
-
-              <span
-                className={`rounded-full px-3 py-1 text-xs font-medium capitalize ${statusStyles}`}
-              >
-                {item.status}
-              </span>
-            </div>
-
-            <p className="mt-4 text-sm leading-6 text-slate-600">
-              {item.message}
-            </p>
-
-            <div className="mt-4">
-              <div className="mb-2 flex items-center justify-between text-xs text-slate-400">
-                <span>Score</span>
-                <span>{item.score}/100</span>
-              </div>
-              <div className="h-2 rounded-full bg-slate-100">
-                <div
-                  className={`h-2 rounded-full ${
-                    item.status === "pass"
-                      ? "bg-lime-500"
-                      : item.status === "warning"
-                        ? "bg-amber-400"
-                        : "bg-red-500"
-                  }`}
-                  style={{ width: `${item.score}%` }}
-                />
-              </div>
-            </div>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-</div>
-            )}
-          </section>
-        </div>
+        <AnalysisDetails analysis={selectedAnalysis} />
       </div>
 
       {isUploadOpen && (

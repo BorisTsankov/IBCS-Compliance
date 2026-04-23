@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { Landing, Login, Register } from "./pages/(auth)";
-import { Dashboard } from "./pages/(root)";
+import { Dashboard, History } from "./pages/(root)";
 import AuthLayout from "./components/layouts/AuthLayout";
 import AppShell from "./components/layouts/AppShell";
 
@@ -14,6 +14,8 @@ export function App() {
       <Route element={<AuthLayout />}>
         <Route element={<AppShell />}>
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/:id" element={<Dashboard />} />
+          <Route path="/history" element={<History />} />
         </Route>
       </Route>
     </Routes>

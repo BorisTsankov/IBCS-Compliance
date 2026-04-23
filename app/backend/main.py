@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
 from src.config.db import Base, engine
 from src.core.models.user_model import UserModel
@@ -10,6 +11,8 @@ from src.api.router.routes import router
 Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="Scoped API", version="0.1.0")
+
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 app.add_middleware(
     CORSMiddleware,

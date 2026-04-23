@@ -4,6 +4,7 @@ from pathlib import Path
 from fastapi import UploadFile
 from src.dal.repo.dashboard_repo import DashboardRepository
 from src.ml.model.mock_dashboard_analyzer import analyze_dashboard_mock
+from src.ml.model.real_model_analyzer import analyze_dashboard_real
 
 
 class DashboardService:
@@ -51,16 +52,18 @@ class DashboardService:
         })
 
         try:
-            result = analyze_dashboard_mock(file.filename)
+            result = analyze_dashboard_real(stored_path)
 
             updated = self.repo.update_analysis(analysis.id, {
-                "status": "completed",
-                "overall_result": result["overall_result"],
-                "overall_score": result["overall_score"],
-                "confidence": result["confidence"],
-                "summary": result["summary"],
-                "feedback_json": result["feedback_json"]
-            })
+    "status": "completed",
+    "overall_result": result["overall_result"],
+    "overall_score": result["overall_score"],
+    "confidence": result["confidence"],
+    "summary": result["summary"],
+    "feedback_json": result["feedback_json"],
+    "annotated_image_path": result.get("annotated_image_path"),
+    "detections_json": result.get("detections_json")
+})
 
             return updated
 

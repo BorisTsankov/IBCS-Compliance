@@ -17,12 +17,15 @@ class DashboardAnalysis(Base):
     file_size = Column(Integer, nullable=False)
 
     status = Column(String, nullable=False, default="processing")
-    overall_result = Column(String, nullable=True)   # compliant / partial / non_compliant
+    overall_result = Column(String, nullable=True)
     overall_score = Column(Integer, nullable=True)
     confidence = Column(String, nullable=True)
     summary = Column(Text, nullable=True)
     feedback_json = Column(JSONB, nullable=True)
     error_message = Column(Text, nullable=True)
+
+    annotated_image_path = Column(String, nullable=True)   # <-- ADD THIS
+    detections_json = Column(JSONB, nullable=True)         # <-- OPTIONAL BUT GOOD
 
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

@@ -1,7 +1,8 @@
-import { Routes, Route } from "react-router-dom"
-import { Landing, Login, Register } from "./pages/(auth)"
-import { Dashboard } from "./pages/(root)"
-import AuthLayout from "./components/layouts/AuthLayout"
+import { Routes, Route } from "react-router-dom";
+import { Landing, Login, Register } from "./pages/(auth)";
+import { Dashboard } from "./pages/(root)";
+import AuthLayout from "./components/layouts/AuthLayout";
+import AppShell from "./components/layouts/AppShell";
 
 export function App() {
   return (
@@ -11,10 +12,12 @@ export function App() {
       <Route path="/login" element={<Login />} />
 
       <Route element={<AuthLayout />}>
-        <Route path="/dashboard" element={<Dashboard />} />
+        <Route element={<AppShell />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
       </Route>
     </Routes>
-  )
+  );
 }
 
-export default App
+export default App;
